@@ -60,7 +60,9 @@ public class RenewMasterydegree {
         {
         	kgrate.put(knowledgepointtravse.get(i), spgrate.get(i));
         	sum=sum+spgrate.get(i);
+        	// System.out.println("123 "+kgrate);
         }
+      
         double average=sum/11;
         for(int i=1;i<=11;i++)
         {
@@ -88,6 +90,7 @@ public class RenewMasterydegree {
         for(int i=0;i<recommendlist_sort.size();i++)
         {
         	int begin=knowledgepoint.get(recommendlist_sort.get(i))-1;
+        //	System.out.println("kg "+recommendlist_sort.get(i)+" begin "+begin);
         	double KGrate=kgrate.get(recommendlist_sort.get(i));
         	for(int j=1;j<=11;j++)
         	{
@@ -97,21 +100,21 @@ public class RenewMasterydegree {
         		 dist=graph.dist[begin][j-1];
         		 //System.out.println("KGrate="+KGrate+" "+kgrate.toString()+" kgrate(j)="+kgrate.get(end)+" end="+end);
         		 
-        		 KGrate=KGrate+ kgrate.get(end)*( Math.exp( -(dist*dist)/ (2 * sigma * sigma) ) );       //反馈函数/ Math.sqrt(2 * Math.PI * sigma * sigma)
-        		 kgrate.put(recommendlist_sort.get(i), KGrate);
-        		 //System.out.println("KGrate="+KGrate);
-        		 double max=getMax(kgrate);
-        	     double min=getMin(kgrate);
-        		 KGrate=((double)(KGrate-min))/(float)(max-min);
-        		// System.out.println("max="+max+" min="+min+" KGrate2="+KGrate);
-        		 //KGrate=KGrate+KGtrate*(1/())
+//        		 KGrate=KGrate+ kgrate.get(end)*( Math.exp( -(dist*dist)/ (2 * sigma * sigma) ) );       //反馈函数/ Math.sqrt(2 * Math.PI * sigma * sigma)  //KGrate=KGrate+KGtrate*(1/())
+        		 KGrate=KGrate+ ( Math.exp( -(dist*dist)/ (2 * sigma * sigma) ) );
+//        		 kgrate.put(recommendlist_sort.get(i), KGrate);
+//        		 double max=getMax(kgrate);
+//        	     double min=getMin(kgrate);
+//        		 KGrate=((double)(KGrate-min))/(float)(max-min);
+//        		 System.out.println(KGrate);
+        		 
         	}
         	//KGrate=(KGrate-average)/standarderror;
         	
             kgrate.put(recommendlist_sort.get(i), KGrate);
-            //System.out.println(kgrate.toString());
+           // System.out.println(kgrate.toString());
         }
-        System.out.println("归一化之前 "+kgrate.toString());
+       
 //        double max=getMax(kgrate);
 //        double min=getMin(kgrate);
 //        System.out.println("min="+min+" max="+max);
@@ -123,10 +126,6 @@ public class RenewMasterydegree {
 //        }
 //        System.out.println("归一化之后 "+kgrate.toString());
         return kgrate;
-//       
-//        System.out.println(begin + " to " + end + ",the cheapest path is:");
-//        System.out.println(list.toString());
-//        System.out.println(graph.dist[begin][end]);
     }
     public double getMax(Map<String,Double>kgrate){
     	double max= 0;

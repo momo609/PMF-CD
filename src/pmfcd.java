@@ -191,6 +191,7 @@ public class pmfcd {
 //			}
 //			System.out.println("\n");
 //		}
+		int studentnum=0;
 		HashMap<Integer,HashMap<Integer,Double>> pmf=new Pmf_CD_recommend().recommend(cp, q);
 		System.out.println(pmf);
 		HashMap<String,Double>pmf_kg=new HashMap<String,Double>();
@@ -208,19 +209,19 @@ public class pmfcd {
         kg.put(11,"非主属性");
     	for(int z=1;z<=11;z++)
     	{
-    		pmf_kg.put(kg.get(z), pmf.get(10).get(z));
+    		pmf_kg.put(kg.get(z), pmf.get(studentnum).get(z));
     	}
-    	System.out.println(pmf_kg);
+    	System.out.println("原掌握程度"+pmf_kg);
 		RenewMasterydegree renew=new RenewMasterydegree();
-		HashMap<String,Double> kgrate=renew.renew(pmf.get(3));
-		
+		HashMap<String,Double> kgrate=renew.renew(pmf.get(studentnum));
+		 System.out.println("后掌握程度  "+kgrate);
 		HashMap<String,Double>rise=new HashMap<String,Double>();
 		for(int z=1;z<=11;z++)
 		{
-			double riserate=(kgrate.get(kg.get(z))-pmf.get(10).get(z))/pmf.get(3).get(z);
+			double riserate=(kgrate.get(kg.get(z))-pmf.get(studentnum).get(z))/pmf.get(studentnum).get(z);
 			rise.put(kg.get(z), riserate);
 		}
-		System.out.println(rise);
+		System.out.println("增长率  "+rise);
   }
   public static void matrix_factorization(double a[][], int steps, double alpha, double beta)
   {
