@@ -1,12 +1,23 @@
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+import java.util.Map.Entry;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 
 public class pmfcd {
@@ -191,7 +202,7 @@ public class pmfcd {
 //			}
 //			System.out.println("\n");
 //		}
-		int studentnum=0;
+		int studentnum=11;
 		HashMap<Integer,HashMap<Integer,Double>> pmf=new Pmf_CD_recommend().recommend(cp, q);
 		System.out.println(pmf);
 		HashMap<String,Double>pmf_kg=new HashMap<String,Double>();
@@ -222,6 +233,61 @@ public class pmfcd {
 			rise.put(kg.get(z), riserate);
 		}
 		System.out.println("增长率  "+rise);
+		writexlsx(pmf.get(studentnum),rise,kgrate,studentnum);
+  }
+  public static void writexlsx(HashMap<Integer,Double> conceptsrate_o,HashMap<String,Double>rise,HashMap<String,Double> kgrate,int studentnum)
+  {
+	  if(conceptsrate_o == null||kgrate==null){  
+          return;  
+      }  
+      HSSFWorkbook wb = new HSSFWorkbook();  
+      HSSFSheet sheet = wb.createSheet("sheet1");  
+      HSSFRow row = sheet.createRow(0);
+      HSSFRow row2 = sheet.createRow(1);
+      HSSFRow row3 = sheet.createRow(2);
+      List<Entry<Integer, Double>> list = new ArrayList<Entry<Integer, Double>>(conceptsrate_o.entrySet());  
+      List<Entry<String, Double>> list2 = new ArrayList<Entry<String, Double>>(kgrate.entrySet());  
+      List<Entry<String, Double>> list3 = new ArrayList<Entry<String, Double>>(rise.entrySet());  
+      int j=0;
+      for (Entry<Integer, Double> e: list) {  
+	        HSSFCell cell = row.createCell(j);
+          cell.setCellValue(e.getValue());  
+          j++;
+          //System.out.print(cell.get);
+      }  
+      j=0;
+      for (Entry<String, Double> e2: list2) {  
+	        HSSFCell cell = row2.createCell(j);
+          cell.setCellValue(e2.getValue());  
+          j++;
+      }  
+      j=0;
+      for (Entry<String, Double> e3: list3) {  
+	        HSSFCell cell = row3.createCell(j);
+          cell.setCellValue(e3.getValue());  
+          j++;
+      }  
+       
+      ByteArrayOutputStream os = new ByteArrayOutputStream();  
+      try  
+      {  
+          wb.write(os);  
+      } catch (IOException e){  
+          e.printStackTrace();  
+      }  
+      byte[] content = os.toByteArray();  
+      String filename="增长率"+studentnum;
+      File file = new File("E:/知识图谱推荐/全部实验结果/增长pmf/"+filename+".xlsx");//Excel文件生成后存储的位置。  
+      OutputStream fos  = null;  
+      try  
+      {  
+          fos = new FileOutputStream(file);  
+          wb.write(fos);  
+          os.close();  
+          fos.close();  
+      }catch (Exception e){  
+          e.printStackTrace();  
+      }             
   }
   public static void matrix_factorization(double a[][], int steps, double alpha, double beta)
   {
