@@ -64,12 +64,14 @@ public class RenewMasterydegree {
         }
       
         double average=sum/11;
+        System.out.println("average "+average);
         for(int i=1;i<=11;i++)
         {
         	if(spgrate.get(i)<average)
         	{
         		recommendlist.put(knowledgepointtravse.get(i),kgrate.get(knowledgepointtravse.get(i)));
         		//recommendlist.add(knowledgepointtravse.get(i));
+        		System.out.println(recommendlist);
         	}
         }
         List<Entry<String, Double>> list2 = new ArrayList<Entry<String,Double>>(recommendlist.entrySet());

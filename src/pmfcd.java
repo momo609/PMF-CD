@@ -29,9 +29,9 @@ public class pmfcd {
 	    int q[][]=new int[56][11];  //Q矩阵
 	    double a[][]=new double[12][56];
 	    double sa[][]=new double[12][56];
-	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("E:/知识图谱推荐/Q.txt")));	    
-	    BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream("E:/知识图谱推荐/全部实验结果/DINAmp.txt")));
-	    BufferedReader br3 = new BufferedReader(new InputStreamReader(new FileInputStream("E:/知识图谱推荐/全部实验结果/sg.txt")));
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("E:/知识图谱推荐/结果/其余一些结果和数据/Q.txt")));	    
+	    BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream("E:/知识图谱推荐/结果/全部实验结果/DINAmp.txt")));
+	    BufferedReader br3 = new BufferedReader(new InputStreamReader(new FileInputStream("E:/知识图谱推荐/结果/全部实验结果/sg.txt")));
 	    double mp[][]=new double[12][11];  //DINA算法算出的掌握程度
 	    double s[]=new double[56];
 	    double g[]=new double[56];
@@ -233,9 +233,20 @@ public class pmfcd {
 			rise.put(kg.get(z), riserate);
 		}
 		System.out.println("增长率  "+rise);
-		writexlsx(pmf.get(studentnum),rise,kgrate,studentnum);
+		HashMap<Integer,Double>kgrateorder=new HashMap<Integer,Double>();
+		HashMap<Integer,Double>riseorder=new HashMap<Integer,Double>();
+		List<Entry<Integer, String>> list = new ArrayList<Entry<Integer, String>>(kg.entrySet());  
+		 for (Entry<Integer, String> e: list) { 
+			 kgrateorder.put(e.getKey(), kgrate.get(e.getValue()));
+			 riseorder.put(e.getKey(), rise.get(e.getValue()));
+	          //System.out.print(kgrateorder+" "+e.getValue());
+	      }  
+		 System.out.println(pmf.get(studentnum));
+		 System.out.println(kgrateorder);
+		 System.out.println(riseorder);
+		writexlsx(pmf.get(studentnum),riseorder,kgrateorder,studentnum);
   }
-  public static void writexlsx(HashMap<Integer,Double> conceptsrate_o,HashMap<String,Double>rise,HashMap<String,Double> kgrate,int studentnum)
+  public static void writexlsx(HashMap<Integer,Double> conceptsrate_o,HashMap<Integer,Double>rise,HashMap<Integer,Double> kgrate,int studentnum)
   {
 	  if(conceptsrate_o == null||kgrate==null){  
           return;  
@@ -246,8 +257,8 @@ public class pmfcd {
       HSSFRow row2 = sheet.createRow(1);
       HSSFRow row3 = sheet.createRow(2);
       List<Entry<Integer, Double>> list = new ArrayList<Entry<Integer, Double>>(conceptsrate_o.entrySet());  
-      List<Entry<String, Double>> list2 = new ArrayList<Entry<String, Double>>(kgrate.entrySet());  
-      List<Entry<String, Double>> list3 = new ArrayList<Entry<String, Double>>(rise.entrySet());  
+      List<Entry<Integer, Double>> list2 = new ArrayList<Entry<Integer, Double>>(kgrate.entrySet());  
+      List<Entry<Integer, Double>> list3 = new ArrayList<Entry<Integer, Double>>(rise.entrySet());  
       int j=0;
       for (Entry<Integer, Double> e: list) {  
 	        HSSFCell cell = row.createCell(j);
@@ -256,13 +267,13 @@ public class pmfcd {
           //System.out.print(cell.get);
       }  
       j=0;
-      for (Entry<String, Double> e2: list2) {  
+      for (Entry<Integer, Double> e2: list2) {  
 	        HSSFCell cell = row2.createCell(j);
           cell.setCellValue(e2.getValue());  
           j++;
       }  
       j=0;
-      for (Entry<String, Double> e3: list3) {  
+      for (Entry<Integer, Double> e3: list3) {  
 	        HSSFCell cell = row3.createCell(j);
           cell.setCellValue(e3.getValue());  
           j++;
@@ -277,7 +288,7 @@ public class pmfcd {
       }  
       byte[] content = os.toByteArray();  
       String filename="增长率"+studentnum;
-      File file = new File("E:/知识图谱推荐/全部实验结果/增长pmf/"+filename+".xlsx");//Excel文件生成后存储的位置。  
+      File file = new File("E:/知识图谱推荐/结果/全部实验结果/增长pmf/"+filename+".xlsx");//Excel文件生成后存储的位置。  
       OutputStream fos  = null;  
       try  
       {  
